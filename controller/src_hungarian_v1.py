@@ -145,10 +145,14 @@ def shaker(m, filtered_walks):
     return m
 
 
-#-------------------------
-# Hungarian Algorithm
-#-------------------------
 def hungarian(m, find_all=True, max_percolation=6):
+    """
+
+    :param m: cost matrix
+    :param find_all: if require all the permutations
+    :param max_percolation:
+    :return: solution to the hungarian algorithm with cost matrix m
+    """
     global walks
     walks = []
     cont = 0
