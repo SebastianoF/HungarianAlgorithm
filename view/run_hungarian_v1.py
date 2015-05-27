@@ -11,6 +11,8 @@ a = gen_matrix_given_permutation(10, 6, p)
 print a
 
 ans = hungarian(a)
+#ans = a.shape
+
 
 print ans
 

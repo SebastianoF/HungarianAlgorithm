@@ -1,6 +1,6 @@
 # -------------------------
-# sourcecode hungarian algorithm
-# as presented on matematicamente
+# source-code hungarian algorithm
+# See the reference:
 #-------------------------
 
 
@@ -9,9 +9,9 @@ def row_reduction(m):
     Step 1 row reduction
     """
     s = m.copy()
-    for i in range(s.nrows()):
-        min_row = min([s[i, j] for j in range(s.ncols())])
-        for j in range(s.ncols()):
+    for i in range(s.shape[0]):
+        min_row = min([s[i, j] for j in range(s.shape[1])])
+        for j in range(s.shape[1]):
             s[i, j] -= min_row
     return s
 
@@ -21,9 +21,9 @@ def col_reduction(m):
     Step 2 column reduction
     """
     s = m.copy()
-    for j in range(s.ncols()):
-        min_col = min([s[i, j] for i in range(s.nrows())])
-        for i in range(s.nrows()):
+    for j in range(s.shape[0]):
+        min_col = min([s[i, j] for i in range(s.shape[0])])
+        for i in range(s.shape[1]):
             s[i, j] -= min_col
     return s
 
@@ -41,7 +41,7 @@ def percolation_finder(m, find_all=True, max_percolation=6):
 
     def scout(m, breadcrumbs):
         global walks
-        n_cols = m.ncols()
+        n_cols = m.shape[0]
         crumbs_number = len(breadcrumbs)
         #print breadcrumbs
         if crumbs_number < n_cols:
@@ -52,16 +52,16 @@ def percolation_finder(m, find_all=True, max_percolation=6):
         elif crumbs_number == n_cols:
             walks_recorder(breadcrumbs)
 
-    def walks_recorder(v, find_all=find_all):
+    def walks_recorder(v, find_all_=find_all):
         global walks
         ri = redundancy_index(v)
-        if find_all:
+        if find_all_:
             walks = walks + [v] + [ri]
-        elif not find_all:
+        else:
             if 0 not in walks and len(walks) < max_percolation:
                 walks = walks + [v] + [ri]
 
-    for j in range(m.ncols()):
+    for j in range(m.shape[1]):
         if m[0, j] == 0:
             scout(m, [j])
 
@@ -86,8 +86,8 @@ def covering_segments_searcher(m, min_redundancy_percolation):
      step 5, auxiliary function
     """
     # (A)
-    n_rows = m.nrows()
-    n_cols = m.ncols()
+    n_rows = m.shape[0]
+    n_cols = m.shape[1]
     marked_row = [0] * n_rows
     marked_col = [0] * n_cols
     # (B)
@@ -126,8 +126,8 @@ def shaker(m, filtered_walks):
     """
     step 5 - shaker
     """
-    n_rows = m.nrows()
-    n_cols = m.ncols()
+    n_rows = m.shape[0]
+    n_cols = m.shape[1]
     min_redundancy_percolation = filtered_walks[0]
     # (1)
     [cov_row, cov_col] = covering_segments_searcher(m, min_redundancy_percolation)
@@ -156,7 +156,7 @@ def hungarian(m, find_all=True, max_percolation=6):
     global walks
     walks = []
     cont = 0
-    max_loop = max(m.nrows(), m.ncols())
+    max_loop = max(m.shape[0], m.shape[1])
     s = row_reduction(col_reduction(m))
     [s, walks] = percolation_finder(s, find_all, max_percolation)
     [s, filtered_walks, flag] = resolvability_test(s, walks)

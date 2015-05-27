@@ -47,3 +47,12 @@ def test_antidiag_dig_permutation():
     m = dig_permutation(m, permutation)
     antidiag = [m[j, d-1-j] for j in range(d)]
     assert_array_equal(antidiag, [0]*d)
+
+
+def test_random_dig_permutation():
+    d = 6
+    m = np.array([5]*(d**2)).reshape(d, d)
+    permutation = gen_random_permutation(d)
+    m = dig_permutation(m, permutation)
+    zero_values = [m[j, permutation[j]] for j in range(d)]
+    assert_array_equal(zero_values, [0]*d)

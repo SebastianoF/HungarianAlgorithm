@@ -39,7 +39,6 @@ print 'test2 antidiagonal digged:'
 print mm
 
 
-
 def lassie():
     d = 5
     a = gen_matrix(12, d)
