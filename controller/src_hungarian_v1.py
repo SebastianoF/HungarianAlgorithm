@@ -27,12 +27,14 @@ def col_reduction(m):
             s[i, j] -= min_col
     return s
 
+walks = []
+
 
 def percolation_finder(m, find_all=True, max_percolation=6):
     """
     Step 3 percolation finder
     """
-    walks = []
+    #walks = []
 
     def redundancy_index(v):
         n = len(v)
@@ -68,12 +70,12 @@ def percolation_finder(m, find_all=True, max_percolation=6):
     return [m, walks]
 
 
-def resolvability_test(m, walks):
+def resolvability_query(m, walks_):
     """
     resolvability_test
     """
-    min_redundancy = min(walks)
-    filtered_walks = [walks[i] for i in range(len(walks))[::2] if walks[i + 1] == min_redundancy]
+    min_redundancy = min(walks_)
+    filtered_walks = [walks_[i] for i in range(len(walks_))[::2] if walks_[i + 1] == min_redundancy]
     if min_redundancy == 0:
         flag = True
     else:
@@ -107,7 +109,7 @@ def covering_segments_searcher(m, min_redundancy_percolation):
                 for j in range(n_cols):
                     if m[i, j] == 0 and marked_col[j] != 1:
                         marked_col[j] = 1
-                        flag_mark = flag_mark + 1
+                        flag_mark += flag_mark
         # (C-2)
         for j in range(n_cols):
             if marked_col[j] == 1:
@@ -159,12 +161,12 @@ def hungarian(m, find_all=True, max_percolation=6):
     max_loop = max(m.shape[0], m.shape[1])
     s = row_reduction(col_reduction(m))
     [s, walks] = percolation_finder(s, find_all, max_percolation)
-    [s, filtered_walks, flag] = resolvability_test(s, walks)
+    [s, filtered_walks, flag] = resolvability_query(s, walks)
     while not flag and cont < max_loop:
         s = shaker(s, filtered_walks)
         walks = []
         [s, walks] = percolation_finder(s, find_all, max_percolation)
-        [s, filtered_walks, flag] = resolvability_test(s, walks)
+        [s, filtered_walks, flag] = resolvability_query(s, walks)
         cont += 1
     walks = []
     return filtered_walks

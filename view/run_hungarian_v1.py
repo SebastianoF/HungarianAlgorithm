@@ -13,6 +13,7 @@ print a
 ans = hungarian(a)
 #ans = a.shape
 
+# TODO: test and debug each step of the hungarian algorithm!!
 
 print ans
 
