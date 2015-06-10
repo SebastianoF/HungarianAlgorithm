@@ -27,15 +27,14 @@ def col_reduction(m):
             s[i, j] -= min_col
     return s
 
+
 walks = []
 
 
-def percolation_finder(m, find_all=True, max_percolation=6):
+def percolation_finder(m, max_num_percolation=6):
     """
     Step 3 percolation finder
     """
-    #walks = []
-
     def redundancy_index(v):
         n = len(v)
         occurrence_vector = [v.count(i) for i in range(n)]
@@ -45,34 +44,49 @@ def percolation_finder(m, find_all=True, max_percolation=6):
         global walks
         n_cols = m.shape[0]
         crumbs_number = len(breadcrumbs)
-        #print breadcrumbs
+        # print breadcrumbs
         if crumbs_number < n_cols:
             col_index_arranged = list(set(range(n_cols)) - set(breadcrumbs)) + list(set(breadcrumbs))
             for j in col_index_arranged:
                 if m[crumbs_number, j] == 0:
-                    scout(m, breadcrumbs + [j])
+                    # More scouts are launched only if some place in the walks' vector is available
+                    # Rearranging indexes may guarantee that a percolation with 0 redundancy index is stored in the
+                    # the first explorations, when available.
+                    if len(walks) < 2 * max_num_percolation:
+                        scout(m, breadcrumbs + [j])
         elif crumbs_number == n_cols:
+            #print breadcrumbs
             walks_recorder(breadcrumbs)
 
-    def walks_recorder(v, find_all_=find_all):
+    def walks_recorder(v):
         global walks
         ri = redundancy_index(v)
-        if find_all_:
-            walks = walks + [v] + [ri]
-        else:
-            if 0 not in walks and len(walks) < max_percolation:
-                walks = walks + [v] + [ri]
+        # if he found a 0 in the indexes, or if he overcome the number of percolation he stop.
+        #if len(walks) < 2 * max_num_percolation:
+        walks = walks + [v] + [ri]
 
+    first_zero = True
     for j in range(m.shape[1]):
         if m[0, j] == 0:
+            if first_zero:
+                # reset to [] the list of walks
+                walks = []
+                first_zero = False
+            print 'A scout goes in mission'
             scout(m, [j])
+
+    global walks
+
+    if len(walks) == 0:
+        raise TypeError('Input matrix has not available 0-percolations.')
 
     return [m, walks]
 
 
 def resolvability_query(m, walks_):
     """
-    resolvability_test
+    resolvability_query:
+
     """
     min_redundancy = min(walks_)
     filtered_walks = [walks_[i] for i in range(len(walks_))[::2] if walks_[i + 1] == min_redundancy]

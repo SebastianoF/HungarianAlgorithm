@@ -1,6 +1,6 @@
 from controller.src_hungarian_v1 import *
-from nose.tools import assert_equal, assert_raises
-from numpy.testing import assert_array_almost_equal, assert_array_equal
+from nose.tools import assert_equal
+from numpy.testing import assert_raises, assert_array_equal
 import numpy as np
 from scipy.linalg import circulant
 
@@ -45,3 +45,24 @@ def test_percolation_finder():
     founded_percolation = a[1][0]
     expected_percolation = [1, 2, 3, 0]
     assert_array_equal(founded_percolation, expected_percolation)
+
+
+def test_percolation_finder_type_error():
+    m = circulant([2, 3, 4, 1])
+    assert_raises(TypeError, percolation_finder(m))
+
+
+def test_percolation_finder_multiple_row_n_5():
+    m = np.array([0]*5**2).reshape(5, 5)
+    a = percolation_finder(m, max_num_percolation=5)
+    number_of_paths = len(a[1]) - 5
+    expected_number_of_paths = 5
+    assert_equal(number_of_paths, expected_number_of_paths)
+
+
+def test_percolation_finder_multiple_row_n_15():
+    m = np.array([0]*5**2).reshape(5, 5)
+    a = percolation_finder(m, max_num_percolation=15)
+    number_of_paths = len(a[1]) - 15
+    expected_number_of_paths = 15
+    assert_equal(number_of_paths, expected_number_of_paths)
