@@ -35,6 +35,8 @@ def percolation_finder(m, max_num_percolation=6):
     """
     Step 3 percolation finder
     """
+    global walks
+
     def redundancy_index(v):
         n = len(v)
         occurrence_vector = [v.count(i) for i in range(n)]
@@ -55,7 +57,6 @@ def percolation_finder(m, max_num_percolation=6):
                     if len(walks) < 2 * max_num_percolation:
                         scout(m, breadcrumbs + [j])
         elif crumbs_number == n_cols:
-            #print breadcrumbs
             walks_recorder(breadcrumbs)
 
     def walks_recorder(v):
@@ -72,10 +73,8 @@ def percolation_finder(m, max_num_percolation=6):
                 # reset to [] the list of walks
                 walks = []
                 first_zero = False
-            print 'A scout goes in mission'
+            # print 'A scout goes in mission'
             scout(m, [j])
-
-    global walks
 
     if len(walks) == 0:
         raise TypeError('Input matrix has not available 0-percolations.')
@@ -85,8 +84,7 @@ def percolation_finder(m, max_num_percolation=6):
 
 def resolvability_query(m, walks_):
     """
-    resolvability_query:
-
+    resolvability_query
     """
     min_redundancy = min(walks_)
     filtered_walks = [walks_[i] for i in range(len(walks_))[::2] if walks_[i + 1] == min_redundancy]
@@ -99,7 +97,8 @@ def resolvability_query(m, walks_):
 
 def covering_segments_searcher(m, min_redundancy_percolation):
     """
-     step 5, auxiliary function
+     step 5, auxiliary function.
+     Returns the positions of horizontal and vertical covering segments
     """
     # (A)
     n_rows = m.shape[0]
@@ -150,23 +149,32 @@ def shaker(m, filtered_walks):
     # (2)
     zero_pos_in_cov_row = [i for i in range(n_rows) if cov_row[i] == 0]
     zero_pos_in_cov_col = [j for j in range(n_cols) if cov_col[j] == 0]
-    m = min([m[i, j] for i in zero_pos_in_cov_row for j in zero_pos_in_cov_col])
+    uncovered_elements = [m[i, j] for i in zero_pos_in_cov_row for j in zero_pos_in_cov_col]
+    if uncovered_elements == []:
+        raise EnvironmentError('Not enough percolations has been considered, '
+                               'set an higher max_num_percolation parameter!')
+
+    min_val = min(uncovered_elements)
     # (3)
     for i in range(n_rows):
         for j in range(n_cols):
             if cov_row[i] == 0 == cov_col[j]:
-                m[i, j] -= m
+                m[i, j] -= min_val
             elif cov_row[i] == 1 == cov_col[j]:
-                m[i, j] += 2 * m
+                m[i, j] += 2 * min_val
     return m
 
 
-def hungarian(m, find_all=True, max_percolation=6):
+def hungarian(m, max_num_percolation=10):
     """
+    Hungarian algorithm.
+    Note that too many zeros in the initial cost matrix may need an high max_num_percolation,
+    Set the weight away from zero, if this is a common value.
 
+    Parameters:
+    ------------
     :param m: cost matrix
-    :param find_all: if require all the permutations
-    :param max_percolation:
+    :param max_num_percolation:
     :return: solution to the hungarian algorithm with cost matrix m
     """
     global walks
@@ -174,12 +182,12 @@ def hungarian(m, find_all=True, max_percolation=6):
     cont = 0
     max_loop = max(m.shape[0], m.shape[1])
     s = row_reduction(col_reduction(m))
-    [s, walks] = percolation_finder(s, find_all, max_percolation)
+    [s, walks] = percolation_finder(s, max_num_percolation=max_num_percolation)
     [s, filtered_walks, flag] = resolvability_query(s, walks)
     while not flag and cont < max_loop:
         s = shaker(s, filtered_walks)
         walks = []
-        [s, walks] = percolation_finder(s, find_all, max_percolation)
+        [s, walks] = percolation_finder(s, max_num_percolation=max_num_percolation)
         [s, filtered_walks, flag] = resolvability_query(s, walks)
         cont += 1
     walks = []
