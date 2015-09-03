@@ -50,8 +50,8 @@ print 'Solution:'
 print resp
 
 
-''''
 # counterexample: matrix with too many zeros:
+# Bugs must be fixed for sparse matrices
 a = gen_matrix(6, 15)
 resp = hungarian(a, max_num_percolation=500)
 
@@ -59,7 +59,7 @@ print 'Cost matrix:'
 print a
 print 'Solution:'
 print resp
-'''
+
 
 
 
