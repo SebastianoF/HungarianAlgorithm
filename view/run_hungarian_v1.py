@@ -62,13 +62,6 @@ print resp
 '''
 
 
-'''
-TODO:
-L'algoritmo si deve fermare quando arriva al numero massimo, o quando incontra uno zero nello spazio
-dei cammini!
-e un flag per provvedere tutte le soluzioni o solo una parte!
-Finire domenica!!!
-'''
 
 
 
