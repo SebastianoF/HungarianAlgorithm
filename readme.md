@@ -1,5 +1,4 @@
-Hungarian Algorithm
-===================
+# Hungarian Algorithm
 
 One of the possible ways of implementing the Hungarian Algorithm.
 Pedagogical approach, readability was preferred over efficiency.
@@ -12,4 +11,3 @@ Seeking for collaborators to built a second version where efficiency is preferre
 
 wip:
 Fixing bugs for sparse matrices.
-Time computing computations
