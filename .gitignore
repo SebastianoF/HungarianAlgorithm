@@ -1,5 +1,7 @@
-prova*
 .idea
+.idea/*
+.DS_Store
+prova*
 
 *.pyc
 *.png
