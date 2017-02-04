@@ -1,11 +1,7 @@
-prova.py
-prova_1.py
-prova_2.py
-prova_3.py
+prova*
+.idea
 
 *.pyc
 *.png
-src/.idea/*
-.idea
 *.npy
 *_old.py
