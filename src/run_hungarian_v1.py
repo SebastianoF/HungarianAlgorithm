@@ -1,5 +1,5 @@
-from controller.src_hungarian_v1 import *
-from model.matrix_generator import *
+from src.main import *
+from src.matrix_generator import *
 
 """
 Some test ready to go, to see utilities and limitations.

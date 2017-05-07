@@ -1,4 +1,4 @@
-from controller.src_hungarian_v1 import *
+from src.main import *
 from nose.tools import assert_equal
 from numpy.testing import assert_raises, assert_array_equal
 import numpy as np

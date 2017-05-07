@@ -3,7 +3,6 @@ model to generate the random matrix and solutions as toy examples.
 matrix are np.array, permutations are list of integers
 """
 import numpy as np
-import itertools as iter
 import random
 
 

@@ -1,7 +1,7 @@
 # -------------------------
 # source-code hungarian algorithm
 # See the reference:
-#-------------------------
+# -------------------------
 
 
 def row_reduction(m):
@@ -63,7 +63,7 @@ def percolation_finder(m, max_num_percolation=6):
         global walks
         ri = redundancy_index(v)
         # if he found a 0 in the indexes, or if he overcome the number of percolation he stop.
-        #if len(walks) < 2 * max_num_percolation:
+        # if len(walks) < 2 * max_num_percolation:
         walks = walks + [v] + [ri]
 
     first_zero = True
@@ -150,7 +150,7 @@ def shaker(m, filtered_walks):
     zero_pos_in_cov_row = [i for i in range(n_rows) if cov_row[i] == 0]
     zero_pos_in_cov_col = [j for j in range(n_cols) if cov_col[j] == 0]
     uncovered_elements = [m[i, j] for i in zero_pos_in_cov_row for j in zero_pos_in_cov_col]
-    if uncovered_elements == []:
+    if not uncovered_elements:  # uncovered_elements == []
         raise EnvironmentError('Not enough percolations has been considered, '
                                'set an higher max_num_percolation parameter!')
 
