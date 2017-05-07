@@ -2,7 +2,6 @@ from src.main import *
 from nose.tools import assert_equal
 from numpy.testing import assert_raises, assert_array_equal
 import numpy as np
-from scipy.linalg import circulant
 
 
 ''' Tests row and col reduction '''
@@ -46,7 +45,10 @@ def test_col_reduction_2():
 def test_percolation_finder():
     # there must be a zero in each row, otherwise
     # there are no percolation available
-    m = circulant([2, 3, 4, 0])
+    m = np.array([[2, 3, 4, 0],
+                  [0, 2, 3, 4],
+                  [4, 0, 2, 3],
+                  [3, 4, 0, 2]])
     a = percolation_finder(m)
     founded_percolation = a[1][0]
     expected_percolation = [1, 2, 3, 0]
@@ -54,7 +56,10 @@ def test_percolation_finder():
 
 
 def test_percolation_finder_type_error():
-    m = circulant([2, 3, 4, 1])
+    m = np.array([[2, 3, 4, 1],
+                  [1, 2, 3, 4],
+                  [4, 1, 2, 3],
+                  [3, 4, 1, 2]])
     assert_raises(TypeError, percolation_finder(m))
 
 
@@ -186,10 +191,3 @@ def test_covering_segment_searcher_4():
                   [2, 0, 9, 8]])
     resp = covering_segments_searcher(a, [1, 2, 1, 1])
     assert_array_equal(resp, ([1, 1, 0, 0], [0, 1, 0, 0]))
-
-
-''' Test shaker '''
-
-
-
-''' Test Hungarian '''
