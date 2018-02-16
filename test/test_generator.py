@@ -1,4 +1,4 @@
-from src.matrix_generator import *
+from HungarianAlgorithm.matrix_generator import *
 from numpy.testing import assert_array_equal
 import numpy as np
 

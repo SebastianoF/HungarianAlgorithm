@@ -1,4 +1,4 @@
-from src.main import *
+from HungarianAlgorithm.model import *
 from nose.tools import assert_equal
 from numpy.testing import assert_raises, assert_array_equal
 import numpy as np
@@ -51,7 +51,7 @@ def test_percolation_finder():
                   [3, 4, 0, 2]])
     a = percolation_finder(m)
     founded_percolation = a[1][0]
-    expected_percolation = [1, 2, 3, 0]
+    expected_percolation = [3, 0, 1, 2]
     assert_array_equal(founded_percolation, expected_percolation)
 
 
@@ -139,7 +139,7 @@ def test_percolation_finder__and_resolvability_query_custom2():
                   [0, 0, 0, 0, 0]])
     a = percolation_finder(m, max_num_percolation=15)
     b = resolvability_query(a[0], a[1])
-    print "Consider this test carefully, a correct refactoring that changes the order of the walks may not pass it"
+    print("Consider this test carefully, a correct refactoring that changes the order of the walks may not pass it")
     assert_equal(b[2], False)
 
 
