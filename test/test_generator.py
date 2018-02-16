@@ -1,6 +1,7 @@
-from HungarianAlgorithm.matrix_generator import *
-from numpy.testing import assert_array_equal
 import numpy as np
+from numpy.testing import assert_array_equal
+
+from HungarianAlgorithm.matrix_generator import gen_random_permutation, gen_matrix, dig_permutation
 
 
 def test_gen_random_permutation():

@@ -60,6 +60,3 @@ def gen_matrix_given_permutations(n_max, d, p_list):
     for p in p_list:
         a = dig_permutation(a, p)
     return a
-
-
-

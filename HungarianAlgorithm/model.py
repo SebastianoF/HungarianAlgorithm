@@ -87,7 +87,7 @@ def resolvability_query(m, walks_):
     resolvability_query
     """
     min_redundancy = min(walks_)
-    filtered_walks = [walks_[i] for i in range(len(walks_))[::2] if walks_[i + 1] == min_redundancy]
+    filtered_walks = [walks_[i] for i in list(range(len(walks_)))[::2] if walks_[i + 1] == min_redundancy]
     if min_redundancy == 0:
         flag = True
     else:

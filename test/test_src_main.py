@@ -1,7 +1,9 @@
-from HungarianAlgorithm.model import *
 from nose.tools import assert_equal
 from numpy.testing import assert_raises, assert_array_equal
 import numpy as np
+
+from HungarianAlgorithm.model import row_reduction, col_reduction, percolation_finder, resolvability_query, \
+    covering_segments_searcher
 
 
 ''' Tests row and col reduction '''
