@@ -7,3 +7,8 @@ prova*
 *.png
 *.npy
 *_old.py
+
+*.aux
+*.synctex.gz
+*.dia
+*.log

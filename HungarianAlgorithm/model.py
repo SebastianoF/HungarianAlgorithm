@@ -1,41 +1,36 @@
-# -------------------------
-# source-code hungarian algorithm
-# See the reference:
-# -------------------------
+import numpy as np
 
 
 def row_reduction(m):
     """
-    Step 1 row reduction
+    step 1: row reduction
     """
-    s = m.copy()
-    for i in range(s.shape[0]):
-        min_row = min([s[i, j] for j in range(s.shape[1])])
-        for j in range(s.shape[1]):
-            s[i, j] -= min_row
-    return s
+    assert isinstance(m, np.matrixlib.defmatrix.matrix)
+    return m - np.min(m, axis=1)
 
 
 def col_reduction(m):
     """
-    Step 2 column reduction
+    step 2: col reduction
     """
-    s = m.copy()
-    for j in range(s.shape[0]):
-        min_col = min([s[i, j] for i in range(s.shape[0])])
-        for i in range(s.shape[1]):
-            s[i, j] -= min_col
-    return s
+    assert isinstance(m, np.matrixlib.defmatrix.matrix)
+    return m - np.min(m, axis=0)
 
 
-walks = []
+def redundace_index(v):
+    """
+    step 3: redundacy index
+    """
+    n = v.size
+    occurrence_vector = [list(v).count(i) for i in range(n)]
+    return np.max(occurrence_vector) - 1 + occurrence_vector.count(0) / float(n)
 
 
 def percolation_finder(m, max_num_percolation=6):
     """
     Step 3 percolation finder
     """
-    global walks
+    walks = { 'walk': [] }  # Name binding
 
     def redundancy_index(v):
         n = len(v)
@@ -43,8 +38,7 @@ def percolation_finder(m, max_num_percolation=6):
         return max(occurrence_vector) - 1 + occurrence_vector.count(0) * 1.0 / n
 
     def scout(m, breadcrumbs):
-        global walks
-        n_cols = m.shape[0]
+        n_cols = m.shape[1]
         crumbs_number = len(breadcrumbs)
         # print breadcrumbs
         if crumbs_number < n_cols:
@@ -54,40 +48,43 @@ def percolation_finder(m, max_num_percolation=6):
                     # More scouts are launched only if some place in the walks' vector is available
                     # Rearranging indexes may guarantee that a percolation with 0 redundancy index is stored in the
                     # the first explorations, when available.
-                    if len(walks) < 2 * max_num_percolation:
+                    if len(walks['walk']) < 2 * max_num_percolation:
                         scout(m, breadcrumbs + [j])
         elif crumbs_number == n_cols:
             walks_recorder(breadcrumbs)
 
     def walks_recorder(v):
-        global walks
         ri = redundancy_index(v)
-        # if he found a 0 in the indexes, or if he overcome the number of percolation he stop.
-        # if len(walks) < 2 * max_num_percolation:
-        walks = walks + [v] + [ri]
+        walks['walk'] = walks['walk'] + [v] + [ri]
 
     first_zero = True
     for j in range(m.shape[1]):
         if m[0, j] == 0:
             if first_zero:
                 # reset to [] the list of walks
-                walks = []
+                walks['walk'] = []
                 first_zero = False
             # print 'A scout goes in mission'
             scout(m, [j])
 
-    if len(walks) == 0:
-        raise TypeError('Input matrix has not available 0-percolations.')
+    if len(walks['walk']) == 0:
+        raise TypeError('Input matrix has no 0-percolations.')
 
-    return [m, walks]
+    return [m, walks['walk']]
 
 
 def resolvability_query(m, walks_):
     """
-    resolvability_query
+    :param m: cost matrix
+    :param walks_: list of 0-percolation followed by its index of redundancy
+    as returned by percolation_finder
+    :return: M again untouched, followed by the list of $0$-percolation with
+    minimal index of redundancy, and with a flag, True if the minimal index
+    is 0 and so we have already our solution, False otherwise.
     """
-    min_redundancy = min(walks_)
-    filtered_walks = [walks_[i] for i in list(range(len(walks_)))[::2] if walks_[i + 1] == min_redundancy]
+    min_redundancy = np.min(walks_[1::2])
+    filtered_walks = [walks_[i] for i in list(range(len(walks_)))[::2] \
+                      if walks_[i + 1] == min_redundancy]
     if min_redundancy == 0:
         flag = True
     else:
@@ -139,7 +136,8 @@ def covering_segments_searcher(m, min_redundancy_percolation):
 
 def shaker(m, filtered_walks):
     """
-    step 5 - shaker
+    :param m : cost matrix $M$,
+    :param filtered_walks: set of walks with minimal redundance index.
     """
     n_rows = m.shape[0]
     n_cols = m.shape[1]
@@ -170,14 +168,12 @@ def hungarian(m, max_num_percolation=10):
     Hungarian algorithm.
     Note that too many zeros in the initial cost matrix may need an high max_num_percolation,
     Set the weight away from zero, if this is a common value.
-
     Parameters:
     ------------
     :param m: cost matrix
     :param max_num_percolation:
     :return: solution to the hungarian algorithm with cost matrix m
     """
-    global walks
     walks = []
     cont = 0
     max_loop = max(m.shape[0], m.shape[1])
