@@ -1,5 +1,4 @@
-from nose.tools import assert_equal
-from numpy.testing import assert_raises, assert_array_equal
+from numpy import testing as npt
 import numpy as np
 
 from HungarianAlgorithm.model import row_reduction, col_reduction, percolation_finder, resolvability_query, \
@@ -14,7 +13,7 @@ def test_row_reduction_1():
     m = np.matrix(np.array([0]*d**2).reshape(d, d))
     m_red = row_reduction(m)
     m_expected = np.array([0]*d**2).reshape(d, d)
-    assert_array_equal(m_red, m_expected)
+    npt.assert_array_equal(m_red, m_expected)
 
 
 def test_row_reduction_2():
@@ -22,7 +21,7 @@ def test_row_reduction_2():
     m = np.matrix(np.array([[j+1] for j in list(range(d))*d]).reshape(d, d))
     m_red = row_reduction(m)
     m_expected = np.array([[j] for j in range(d)]*d).reshape(d, d)
-    assert_array_equal(m_red, m_expected)
+    npt.assert_array_equal(m_red, m_expected)
 
 
 def test_col_reduction_1():
@@ -30,7 +29,7 @@ def test_col_reduction_1():
     m = np.matrix(np.array([[j+1]*d for j in range(d)]))
     m_red = col_reduction(m)
     m_expected = np.array([[j]*d for j in range(d)])
-    assert_array_equal(m_red, m_expected)
+    npt.assert_array_equal(m_red, m_expected)
 
 
 def test_col_reduction_2():
@@ -38,7 +37,7 @@ def test_col_reduction_2():
     m = np.matrix(np.array([[j+1]*d for j in range(d)]))
     m_red = col_reduction(m)
     m_expected = np.array([[j]*d for j in range(d)])
-    assert_array_equal(m_red, m_expected)
+    npt.assert_array_equal(m_red, m_expected)
 
 
 ''' Tests percolation finder '''
@@ -55,7 +54,7 @@ def test_percolation_finder():
     a = percolation_finder(m)
     founded_percolation = a[1][0]
     expected_percolation = [3, 0, 1, 2]
-    assert_array_equal(founded_percolation, expected_percolation)
+    npt.assert_array_equal(founded_percolation, expected_percolation)
 
 
 def test_percolation_finder_type_error():
@@ -63,7 +62,7 @@ def test_percolation_finder_type_error():
                   [1, 2, 3, 4],
                   [4, 1, 2, 3],
                   [3, 4, 1, 2]])
-    assert_raises(TypeError, percolation_finder, m)
+    npt.assert_raises(TypeError, percolation_finder, m)
 
 
 def test_percolation_finder_multiple_row_n_5():
@@ -71,7 +70,7 @@ def test_percolation_finder_multiple_row_n_5():
     a = percolation_finder(m, max_num_percolation=5)
     number_of_paths = len(a[1]) - 5
     expected_number_of_paths = 5
-    assert_equal(number_of_paths, expected_number_of_paths)
+    npt.assert_equal(number_of_paths, expected_number_of_paths)
 
 
 def test_percolation_finder_multiple_row_n_15():
@@ -79,7 +78,7 @@ def test_percolation_finder_multiple_row_n_15():
     a = percolation_finder(m, max_num_percolation=15)
     number_of_paths = len(a[1]) - 15
     expected_number_of_paths = 15
-    assert_equal(number_of_paths, expected_number_of_paths)
+    npt.assert_equal(number_of_paths, expected_number_of_paths)
 
 
 ''' Test resolvability query '''
@@ -91,7 +90,7 @@ def test_resolvability_query_one_zero():
                                    [1, 2, 3], 1]]
     resp = resolvability_query(phantom_input[0], phantom_input[1])
     expected_resp = [['phantom'], [[0, 2, 3]], True]
-    assert_array_equal(resp, expected_resp)
+    npt.assert_array_equal(resp, expected_resp)
 
 
 def test_resolvability_query_no_zero_one_min():
@@ -100,7 +99,7 @@ def test_resolvability_query_no_zero_one_min():
                                    [1, 2, 3], 1]]
     resp = resolvability_query(phantom_input[0], phantom_input[1])
     expected_resp = [['phantom'], [[0, 2, 3]], False]
-    assert_array_equal(resp, expected_resp)
+    npt.assert_array_equal(resp, expected_resp)
 
 
 def test_resolvability_query_no_zero_all_min():
@@ -109,17 +108,17 @@ def test_resolvability_query_no_zero_all_min():
                                    [1, 2, 3], 1]]
     resp = resolvability_query(phantom_input[0], phantom_input[1])
     expected_resp = [['phantom'], [[1, 2, 3], [0, 2, 3], [1, 2, 3]], False]
-    assert_array_equal(resp, expected_resp)
+    npt.assert_array_equal(resp, expected_resp)
 
 
 def test_resolvability_query_flag_1():
     resp = resolvability_query(['matrix'], [['walks'], 0])
-    assert_equal(resp[2], True)
+    npt.assert_equal(resp[2], True)
 
 
 def test_resolvability_query_flag_2():
     resp = resolvability_query(['matrix'], [['walks'], 1])
-    assert_equal(resp[2], False)
+    npt.assert_equal(resp[2], False)
 
 
 def test_percolation_finder__and_resolvability_query_custom():
@@ -131,7 +130,7 @@ def test_percolation_finder__and_resolvability_query_custom():
                   [2, 1, 4, 6, 0, 7]])
     a = percolation_finder(m, max_num_percolation=15)
     b = resolvability_query(a[0], a[1])
-    assert_equal(b[2], True)
+    npt.assert_equal(b[2], True)
 
 
 def test_percolation_finder__and_resolvability_query_custom2():
@@ -143,7 +142,7 @@ def test_percolation_finder__and_resolvability_query_custom2():
     a = percolation_finder(m, max_num_percolation=15)
     b = resolvability_query(a[0], a[1])
     print("Consider this test carefully, a correct refactoring that changes the order of the walks may not pass it")
-    assert_equal(b[2], False)
+    npt.assert_equal(b[2], False)
 
 
 def test_percolation_finder__and_resolvability_query_custom3():
@@ -154,7 +153,7 @@ def test_percolation_finder__and_resolvability_query_custom3():
                   [0, 0, 0, 0, 0]])
     a = percolation_finder(m, max_num_percolation=50)
     b = resolvability_query(a[0], a[1])
-    assert_equal(b[2], True)  # same matrix as before, increased numbers of percolations.
+    npt.assert_equal(b[2], True)  # same matrix as before, increased numbers of percolations.
 
 
 ''' Test covering segment searcher '''
@@ -166,7 +165,7 @@ def test_covering_segment_searcher_1():
                   [1, 0, 1, 1],
                   [1, 0, 1, 1]])
     resp = covering_segments_searcher(a, [0, 1, 1, 1])
-    assert_array_equal(resp, ([1, 0, 0, 0], [0, 1, 0, 0]))
+    npt.assert_array_equal(resp, ([1, 0, 0, 0], [0, 1, 0, 0]))
 
 
 def test_covering_segment_searcher_2():
@@ -175,7 +174,7 @@ def test_covering_segment_searcher_2():
                   [0, 1, 1, 1],
                   [0, 1, 1, 1]])
     resp = covering_segments_searcher(a, [0, 0, 0, 0])
-    assert_array_equal(resp, ([0, 0, 0, 0], [1, 0, 0, 0]))
+    npt.assert_array_equal(resp, ([0, 0, 0, 0], [1, 0, 0, 0]))
 
 
 def test_covering_segment_searcher_3():
@@ -184,7 +183,7 @@ def test_covering_segment_searcher_3():
                   [1, 0, 1, 1],
                   [1, 0, 1, 1]])
     resp = covering_segments_searcher(a, [1, 2, 1, 1])
-    assert_array_equal(resp, ([0, 1, 0, 0], [0, 1, 0, 0]))
+    npt.assert_array_equal(resp, ([0, 1, 0, 0], [0, 1, 0, 0]))
 
 
 def test_covering_segment_searcher_4():
@@ -193,4 +192,4 @@ def test_covering_segment_searcher_4():
                   [9, 0, 1, 9],
                   [2, 0, 9, 8]])
     resp = covering_segments_searcher(a, [1, 2, 1, 1])
-    assert_array_equal(resp, ([1, 1, 0, 0], [0, 1, 0, 0]))
+    npt.assert_array_equal(resp, ([1, 1, 0, 0], [0, 1, 0, 0]))

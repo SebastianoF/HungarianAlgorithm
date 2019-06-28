@@ -1,0 +1,18 @@
+[run]
+source = HungarianAlgorithm
+include = */HungarianAlgorithm/*,
+omit =
+    */python?.?/*
+    */examples.py
+    *__init__*
+    */test/*
+    */z_*
+
+[report]
+include = */HungarianAlgorithm/*,
+omit =
+    */python?.?/*
+    */examples.py
+    *__init__*
+    */test/*
+    */z_*

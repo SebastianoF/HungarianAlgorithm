@@ -1,7 +1,11 @@
 .idea
 .idea/*
 .DS_Store
+.vscode
 prova*
+__pycache__
+.coverage
+htmlcov
 
 *.pyc
 *.png

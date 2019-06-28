@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.testing import assert_array_equal
+from numpy import testing as npt
 
 from HungarianAlgorithm.matrix_generator import gen_random_permutation, gen_matrix, dig_permutation
 
@@ -16,7 +16,7 @@ def test_gen_random_permutation():
 def test_shape_gen_matrix():
     n_max, d = 10, 5
     a = gen_matrix(n_max, d)
-    assert_array_equal(a.shape, (d, d))
+    npt.assert_array_equal(a.shape, (d, d))
 
 
 def test_type_and_values_gen_matrix():
@@ -37,7 +37,7 @@ def test_diagonal_dig_permutation():
     m = np.array([5]*(d**2)).reshape(d, d)
     permutation = range(d)
     m = dig_permutation(m, permutation)
-    assert_array_equal(list(np.diag(m)), [0]*d)
+    npt.assert_array_equal(list(np.diag(m)), [0]*d)
 
 
 def test_antidiag_dig_permutation():
@@ -46,7 +46,7 @@ def test_antidiag_dig_permutation():
     permutation = range(d)[::-1]
     m = dig_permutation(m, permutation)
     antidiag = [m[j, d-1-j] for j in range(d)]
-    assert_array_equal(antidiag, [0]*d)
+    npt.assert_array_equal(antidiag, [0]*d)
 
 
 def test_random_dig_permutation():
@@ -55,4 +55,4 @@ def test_random_dig_permutation():
     permutation = gen_random_permutation(d)
     m = dig_permutation(m, permutation)
     zero_values = [m[j, permutation[j]] for j in range(d)]
-    assert_array_equal(zero_values, [0]*d)
+    npt.assert_array_equal(zero_values, [0]*d)
